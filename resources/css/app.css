@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-[#F5F6FA] text-gray-800 font-sans;
+    }
+}
+
+@layer utilities {
+    .card-saas {
+        @apply rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300;
+    }
+
+    /* Scrollbar ala VSCode */
+    .scrollbar-vscode {
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+    }
+
+    .scrollbar-vscode::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .scrollbar-vscode::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-vscode::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 9999px;
+    }
+
+    .scrollbar-vscode:hover::-webkit-scrollbar-thumb {
+        background-color: rgba(22, 101, 52, 0.45);
+    }
+
+    .scrollbar-vscode:hover {
+        scrollbar-color: rgba(22, 101, 52, 0.45) transparent;
+    }
+}
+
+/* =========================================================
+   FLATPICKR — FATAYAT NU PREMIUM UI
+   ========================================================= */
+
+.flatpickr-calendar {
+    width: 320px !important;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14) !important;
+    overflow: hidden !important;
+    padding: 0.75rem !important;
+    font-family: "Inter", sans-serif !important;
+}
+
+/* ===== HEADER LEBIH KECIL ===== */
+.flatpickr-months {
+  position: relative !important;
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 100%) !important;
+  border-radius: 0.875rem !important;
+  padding: 0.15rem 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.flatpickr-month {
+  height: 40px !important;
+}
+
+.flatpickr-current-month {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  padding: 0 !important;
+}
+
+/* ===== DROPDOWN BULAN ===== */
+.flatpickr-monthDropdown-months {
+  appearance: none !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 0.625rem !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 0.25rem 1.5rem 0.20rem 0.5rem !important;
+  min-height: 30px !important;
+}
+
+/* ===== TAHUN ===== */
+.flatpickr-current-month input.cur-year {
+  width: 3.5rem !important;
+  min-height: 30px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 0.625rem !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  text-align: center !important;
+  padding: 0.25rem !important;
+  box-shadow: none !important;
+}
+
+/* ===== TOMBOL PANAH ===== */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  top: 4px !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+}
+
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+  width: 12px !important;
+  height: 12px !important;
+  fill: #ffffff !important;
+}
+
+/* ===== NAMA HARI ===== */
+.flatpickr-weekdays {
+  background: #f0fdf4 !important;
+  border: 1px solid #dcfce7 !important;
+  border-radius: 0.875rem !important;
+  padding: 0.25rem 0 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.flatpickr-weekday {
+  color: #166534 !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* ===== GRID TANGGAL ===== */
+.flatpickr-days {
+  width: 100% !important;
+}
+
+.dayContainer {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+.flatpickr-day {
+  max-width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  border-radius: 0.875rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #111827 !important;
+  transition: all 0.16s ease !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: #cbd5e1 !important;
+}
+
+.flatpickr-day:hover {
+  background: #dcfce7 !important;
+  border-color: #bbf7d0 !important;
+  color: #166534 !important;
+  transform: translateY(-1px);
+}
+
+/* ===== HARI INI ===== */
+.flatpickr-day.today {
+  border: 2px solid #22c55e !important;
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  font-weight: 700 !important;
+}
+
+/* ===== TANGGAL DIPILIH ===== */
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 100%) !important;
+  border-color: #15803d !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 8px 18px rgba(21, 128, 61, 0.28) !important;
+}
+
+/* ===== ANIMASI ===== */
+.flatpickr-calendar.animate.open {
+  animation: fp-pop 0.18s ease-out;
+}
+
+@keyframes fp-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

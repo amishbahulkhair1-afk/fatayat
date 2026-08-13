@@ -1,0 +1,10 @@
+[90m= [39m[34;4mApp\Models\Pengurus[39;24m {#7979
+    [34mnama_lengkap[39m: [32m"[39m[32mTest Ketua[39m[32m"[39m,
+    [34mjenis_kelamin[39m: [32m"[39m[32mPerempuan[39m[32m"[39m,
+    [34mtanggal_lahir[39m: [32m"[39m[32m1990-01-01[39m[32m"[39m,
+    [34malamat_domisili[39m: [32m"[39m[32mPragaan[39m[32m"[39m,
+    [34mstatus_menikah[39m: [32m"[39m[32mMenikah[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-08-08 15:07:19[39m[32m"[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-08-08 15:07:19[39m[32m"[39m,
+    [34mid[39m: [35m1[39m,
+  }
