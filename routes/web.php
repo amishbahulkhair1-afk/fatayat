@@ -27,9 +27,16 @@ use App\Http\Controllers\DokumentasiController;
 use App\Http\Controllers\BeritaPublikController;
 use App\Http\Controllers\DokumentasiPublikController;
 use App\Http\Controllers\NotulenController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MonitoringParController;
+use App\Models\Berita;
+use App\Models\Profil;
+use App\Models\Dokumentasi;
+use App\Models\ProfilOrganisasi;
+use App\Models\MisiOrganisasi;
+use App\Models\DokumentasiKegiatan;
 
 // ===== ROUTE PUBLIK =====
 Route::get('/publikasi/berita', [BeritaPublikController::class, 'index'])->name('berita.publik.index');
@@ -44,8 +51,33 @@ Route::get('/lapor-pengaduan/sukses/{noPengaduan}', [PengaduanPublikController::
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/profil', [ProfilOrganisasiController::class, 'index'])
+    ->name('profil.publik');
+Route::get('/', function () {
+    $profil = ProfilOrganisasi::first();
+
+    $misi = MisiOrganisasi::all();
+
+    $beritaTerbaru = Berita::where('status', 'Publik')
+        ->latest()
+        ->take(3)
+        ->get();
+
+    $dokumentasiTerbaru = DokumentasiKegiatan::latest()
+        ->take(6)
+        ->get();
+
+    return view('welcome', compact(
+        'profil',
+        'misi',
+        'beritaTerbaru',
+        'dokumentasiTerbaru'
+    ));
+});
+
 
 Route::middleware('auth')->group(function () {
+    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

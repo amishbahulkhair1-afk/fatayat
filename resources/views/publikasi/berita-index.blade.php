@@ -1,39 +1,37 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.userapp')
 
-<head>
-    <meta charset="utf-8">
-    <title>Berita Kegiatan - Fatayat NU PAC Pragaan</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Berita Kegiatan - Fatayat NU PAC Pragaan')
 
-<body class="bg-gray-100 py-8">
-    <div class="max-w-4xl mx-auto px-4">
-        <h1 class="text-2xl font-bold text-center mb-6">Berita Kegiatan Fatayat NU PAC Pragaan</h1>
+@include('publikasi._styles')
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            @forelse($berita as $item)
-                <a href="{{ route('berita.publik.show', $item->id) }}"
-                    class="bg-white rounded shadow overflow-hidden hover:shadow-md">
-                    @if ($item->gambar_utama)
-                        <img src="{{ Storage::url($item->gambar_utama) }}" class="w-full h-40 object-cover">
-                    @else
-                        <div class="w-full h-40 bg-gray-200"></div>
-                    @endif
-                    <div class="p-3">
-                        <p class="text-xs text-gray-500">{{ $item->kategori }} &middot; {{ $item->tanggal_kegiatan }}
-                        </p>
-                        <h3 class="font-semibold">{{ $item->judul }}</h3>
-                        <p class="text-sm text-gray-500">Oleh {{ $item->penulis }}</p>
-                    </div>
-                </a>
-            @empty
-                <p class="col-span-3 text-center text-gray-500">Belum ada berita yang dipublikasikan.</p>
-            @endforelse
+@section('content')
+    <section class="publication-page">
+        <div class="publication-container">
+            <header class="publication-intro">
+                <span class="publication-kicker"><i class="fa-solid fa-newspaper"></i> Publikasi Organisasi</span>
+                <h1>Berita & Kegiatan</h1>
+                <p>Ikuti kabar terbaru, kegiatan, dan langkah pengabdian Fatayat NU PAC Pragaan.</p>
+            </header>
+            <div class="publication-grid">
+                @forelse ($berita as $item)
+                    <a href="{{ route('berita.publik.show', $item) }}" class="publication-card">
+                        <div class="publication-media">
+                            @if ($item->gambar_utama)
+                                <img src="{{ Storage::url($item->gambar_utama) }}" alt="{{ $item->judul }}">
+                            @else <div class="publication-placeholder"><i class="fa-solid fa-image"></i></div> @endif
+                        </div>
+                        <div class="publication-card-body">
+                            <p class="publication-meta">{{ $item->kategori }} · {{ \Illuminate\Support\Carbon::parse($item->tanggal_kegiatan)->translatedFormat('d M Y') }}</p>
+                            <h2>{{ $item->judul }}</h2>
+                            <p class="publication-excerpt">{{ \Illuminate\Support\Str::limit(strip_tags($item->isi_berita), 115) }}</p>
+                            <span class="publication-read">Baca selengkapnya <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                @empty
+                    <div class="publication-empty"><i class="fa-regular fa-newspaper"></i>Belum ada berita yang dipublikasikan.</div>
+                @endforelse
+            </div>
+            <div class="publication-pagination">{{ $berita->links() }}</div>
         </div>
-
-        <div class="mt-6">{{ $berita->links() }}</div>
-    </div>
-</body>
-
-</html>
+    </section>
+@endsection

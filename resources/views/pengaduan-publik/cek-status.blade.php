@@ -1,36 +1,35 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.userapp')
 
-<head>
-    <meta charset="utf-8">
-    <title>Cek Status Pengaduan</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Cek Status Pengaduan - Fatayat NU PAC Pragaan')
 
-<body class="bg-gray-100 py-16">
-    <div class="max-w-md mx-auto px-4">
-        <div class="bg-white p-6 rounded shadow">
-            <h1 class="text-xl font-bold text-center mb-4">Cek Status Pengaduan</h1>
+@include('pengaduan-publik._styles')
 
-            <form action="{{ route('pengaduan.publik.cari') }}" method="POST" class="space-y-4">
-                @csrf
-
-                <div>
-                    <label class="block font-medium">Nomor Pengaduan</label>
-                    <input type="text" name="no_pengaduan" value="{{ old('no_pengaduan') }}"
-                        placeholder="misal: PGD-2026-0001" class="w-full border rounded p-2">
-                    @error('no_pengaduan')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">Cek Status</button>
-            </form>
-
-            <a href="{{ route('pengaduan.publik.create') }}" class="text-blue-600 text-sm block text-center mt-4">Buat
-                Pengaduan Baru</a>
+@section('content')
+    <section class="complaint-page">
+        <div class="complaint-shell">
+            <div class="complaint-hero">
+                <span class="complaint-kicker"><i class="fa-solid fa-magnifying-glass"></i> Layanan Publik</span>
+                <h1>Cek Status Pengaduan</h1>
+                <p>Masukkan nomor laporan Anda untuk melihat perkembangan penanganannya.</p>
+            </div>
+            <div class="complaint-card">
+                <div class="complaint-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+                <h2 class="complaint-card-title">Lacak laporan Anda</h2>
+                <p class="complaint-card-intro">Nomor pengaduan diberikan setelah laporan berhasil dikirim.</p>
+                <form action="{{ route('pengaduan.publik.cari') }}" method="POST">
+                    @csrf
+                    <div class="complaint-field">
+                        <label for="no_pengaduan">Nomor Pengaduan</label>
+                        <input type="text" name="no_pengaduan" value="{{ old('no_pengaduan') }}" id="no_pengaduan"
+                            placeholder="Contoh: PGD-2026-0001" class="complaint-input" autocomplete="off">
+                        @error('no_pengaduan') <p class="complaint-error">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="complaint-actions">
+                        <a href="{{ route('pengaduan.publik.create') }}" class="complaint-link">Buat Pengaduan</a>
+                        <button type="submit" class="complaint-button"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</body>
-
-</html>
+    </section>
+@endsection

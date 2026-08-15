@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
+use App\Notifications\PengaduanDitanggapi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class PengaduanController extends Controller
 {
@@ -63,7 +65,18 @@ class PengaduanController extends Controller
             'tanggapan_admin' => 'nullable|string',
         ]);
 
+        $tanggapanBerubah = $pengaduan->tanggapan_admin !== ($validated['tanggapan_admin'] ?? null);
+
         $pengaduan->update($validated);
+
+        if ($tanggapanBerubah && filled($pengaduan->tanggapan_admin)) {
+            if ($pengaduan->user) {
+                $pengaduan->user->notify(new PengaduanDitanggapi($pengaduan));
+            } elseif (filled($pengaduan->email_pelapor)) {
+                Notification::route('mail', $pengaduan->email_pelapor)
+                    ->notify(new PengaduanDitanggapi($pengaduan));
+            }
+        }
 
         return redirect()->route('pengaduan.show', $pengaduan->id)->with('success', 'Tanggapan berhasil disimpan.');
     }

@@ -1,19 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.userapp')
 
-<head>
-    <meta charset="utf-8">
-    <title>Pengaduan Terkirim</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Pengaduan Terkirim - Fatayat NU PAC Pragaan')
 
-<body class="bg-gray-100 py-16">
-    <div class="max-w-md mx-auto px-4 text-center bg-white p-8 rounded shadow">
-        <h1 class="text-xl font-bold text-green-600 mb-2">Pengaduan Berhasil Dikirim</h1>
-        <p class="text-gray-600 mb-4">Simpan nomor pengaduan ini untuk memantau status laporan Anda:</p>
-        <p class="text-2xl font-bold border-2 border-dashed p-3 rounded">{{ $noPengaduan }}</p>
-        <a href="{{ route('pengaduan.publik.create') }}" class="text-blue-600 mt-4 inline-block">Buat Pengaduan Lain</a>
-    </div>
-</body>
+@include('pengaduan-publik._styles')
 
-</html>
+@section('content')
+    <section class="complaint-page">
+        <div class="complaint-shell" style="max-width: 620px;">
+            <div class="complaint-card" style="text-align: center;">
+                <div class="complaint-icon"><i class="fa-solid fa-check"></i></div>
+                <h1 class="complaint-card-title">Pengaduan berhasil dikirim</h1>
+                <p class="complaint-card-intro">Simpan nomor berikut untuk memantau status dan tanggapan atas laporan Anda.</p>
+                <div class="complaint-number">{{ $noPengaduan }}</div>
+                <div class="complaint-actions">
+                    <a href="{{ route('pengaduan.publik.cek') }}" class="complaint-button"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+                    <a href="{{ route('pengaduan.publik.create') }}" class="complaint-link">Buat Pengaduan Lain</a>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

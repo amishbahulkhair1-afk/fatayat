@@ -1,32 +1,26 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.userapp')
 
-<head>
-    <meta charset="utf-8">
-    <title>{{ $berita->judul }}</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', $berita->judul . ' - Fatayat NU PAC Pragaan')
 
-<body class="bg-gray-100 py-8">
-    <div class="max-w-2xl mx-auto px-4">
-        <a href="{{ route('berita.publik.index') }}" class="text-blue-600 text-sm">&larr; Kembali ke Daftar Berita</a>
+@include('publikasi._styles')
 
-        <div class="bg-white rounded shadow overflow-hidden mt-4">
-            @if ($berita->gambar_utama)
-                <img src="{{ Storage::url($berita->gambar_utama) }}" class="w-full h-64 object-cover">
-            @endif
-            <div class="p-6">
-                <p class="text-sm text-gray-500">{{ $berita->kategori }} &middot; {{ $berita->tanggal_kegiatan }}
-                    @if ($berita->lokasi)
-                        &middot; {{ $berita->lokasi }}
-                    @endif
-                </p>
-                <h1 class="text-2xl font-bold mt-1 mb-2">{{ $berita->judul }}</h1>
-                <p class="text-sm text-gray-500 mb-4">Oleh {{ $berita->penulis }}</p>
-                <div class="prose max-w-none whitespace-pre-line">{{ $berita->isi_berita }}</div>
-            </div>
+@section('content')
+    <section class="publication-page">
+        <div class="article-shell">
+            <a href="{{ route('berita.publik.index') }}" class="article-back"><i class="fa-solid fa-arrow-left"></i> Kembali ke daftar berita</a>
+            <article class="article-card">
+                <div class="publication-media">
+                    @if ($berita->gambar_utama)
+                        <img src="{{ Storage::url($berita->gambar_utama) }}" alt="{{ $berita->judul }}">
+                    @else <div class="publication-placeholder"><i class="fa-solid fa-newspaper"></i></div> @endif
+                </div>
+                <div class="article-body">
+                    <p class="publication-meta">{{ $berita->kategori }} · {{ \Illuminate\Support\Carbon::parse($berita->tanggal_kegiatan)->translatedFormat('d F Y') }}</p>
+                    <h1 class="article-title">{{ $berita->judul }}</h1>
+                    <p class="article-byline">Oleh {{ $berita->penulis }}@if ($berita->lokasi) <span> · {{ $berita->lokasi }}</span> @endif</p>
+                    <div class="article-content">{{ $berita->isi_berita }}</div>
+                </div>
+            </article>
         </div>
-    </div>
-</body>
-
-</html>
+    </section>
+@endsection

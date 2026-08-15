@@ -26,6 +26,7 @@ class PengaduanPublikController extends Controller
             'tanggal_pengaduan' => 'required|date',
             'nama_pelapor' => 'required|string|max:255',
             'kontak_pelapor' => 'nullable|string|max:255',
+            'email_pelapor' => 'nullable|email:rfc,dns|max:255',
             'isi_pengaduan' => 'required|string',
             'bukti_pendukung' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
@@ -34,9 +35,18 @@ class PengaduanPublikController extends Controller
         $tahun = date('Y');
         $urutan = Pengaduan::whereYear('created_at', $tahun)->count() + 1;
         $validated['no_pengaduan'] = 'PGD-' . $tahun . '-' . str_pad($urutan, 4, '0', STR_PAD_LEFT);
+        $validated['user_id'] = $request->user()?->id;
 
         if ($request->hasFile('bukti_pendukung')) {
             $validated['bukti_pendukung'] = $request->file('bukti_pendukung')->store('pengaduan', 'public');
+        }
+
+        if (strtolower($request->kecamatan) !== 'pragaan') {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'kecamatan' => 'Layanan pengaduan ini hanya untuk wilayah Kecamatan Pragaan.'
+                ]);
         }
 
         $pengaduan = Pengaduan::create($validated);

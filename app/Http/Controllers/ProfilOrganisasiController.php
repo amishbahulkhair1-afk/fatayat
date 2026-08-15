@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfilOrganisasiController extends Controller
 {
+    /**
+     * Menampilkan ringkasan profil organisasi untuk pengunjung publik.
+     */
+    public function index()
+    {
+        $profil = ProfilOrganisasi::with('misi')->first();
+
+        return view('profil-organisasi.publik', compact('profil'));
+    }
+
     // Ambil profil yang sudah ada, atau bikin baru kalau belum pernah ada (singleton pattern)
     private function getProfil()
     {

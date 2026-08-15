@@ -47,11 +47,14 @@ $watch('zoom', value => {
         <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-black/40 lg:hidden"
             @click="sidebarOpen = false"></div>
 
-        <!-- Sidebar -->
+        @php
+            $user = auth()->user();
+        @endphp
+
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             class="fixed inset-y-0 left-0 z-50 w-72 bg-[#F4F7F4] border-r border-[#F4F7F4] flex flex-col transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex-shrink-0">
 
-            <!-- Logo -->
+            {{-- Logo --}}
             <div class="h-20 flex items-center justify-between px-6 border-b border-[#F4F7F4] bg-[#F4F7F4]">
                 <div class="flex items-center gap-3">
                     <div
@@ -73,61 +76,67 @@ $watch('zoom', value => {
                 </button>
             </div>
 
-            <!-- Menu -->
+            {{-- Menu --}}
             <nav class="sidebar-scroll flex-1 overflow-y-auto px-3 py-4 text-sm">
 
-                <a href="{{ route('dashboard.pac') }}"
-                    class="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium transition {{ request()->routeIs('dashboard.pac') ? 'bg-green-600 text-white shadow-lg shadow-green-600/20' : 'text-gray-700 hover:bg-white hover:shadow-sm' }}">
-                    <span class="text-lg">🏠</span>
-                    Dashboard
-                </a>
+                {{-- ================= ADMIN PAC ================= --}}
+                @if ($user->role === 'admin_pac')
+                    <a href="{{ route('dashboard.pac') }}"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium transition {{ request()->routeIs('dashboard.pac') ? 'bg-green-600 text-white shadow-lg shadow-green-600/20' : 'text-gray-700 hover:bg-white hover:shadow-sm' }}">
+                        <span class="text-lg">🏠</span>
+                        Dashboard
+                    </a>
 
-                <!-- ORGANISASI -->
-                <div class="mt-6">
-                    <button @click="organisasi = !organisasi"
-                        class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
-                        <span>Organisasi</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
-                            :class="organisasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    {{-- ORGANISASI --}}
+                    <div class="mt-6">
+                        <button @click="organisasi = !organisasi"
+                            class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
+                            <span>Organisasi</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                :class="organisasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
 
-                    <div x-show="organisasi" x-transition class="mt-2 space-y-1">
-                        <a href="{{ route('pac.index') }}"
-                            class="{{ request()->routeIs('pac.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">🏢</span>
-                            <span>PAC</span>
-                        </a>
-                        <a href="{{ route('pr.index') }}"
-                            class="{{ request()->routeIs('pr.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">🏘️</span>
-                            <span>PR</span>
-                        </a>
-                        <a href="{{ route('par.index') }}"
-                            class="{{ request()->routeIs('par.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">🏠</span>
-                            <span>PAR</span>
-                        </a>
-                        <a href="{{ route('pengurus.index') }}"
-                            class="{{ request()->routeIs('pengurus.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">👤</span>
-                            <span>Pengurus</span>
-                        </a>
-                        <a href="{{ route('lembaga.index') }}"
-                            class="{{ request()->routeIs('lembaga.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">🏛️</span>
-                            <span>Lembaga</span></a>
-                        <a href="{{ route('jabatan.index') }}"
-                            class="{{ request()->routeIs('jabatan.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">📌</span>
-                            <span>Jabatan</span></a>
-                        @php
-                            $profilActive = request()->routeIs('profil.*');
-                        @endphp
+                        <div x-show="organisasi" x-transition class="mt-2 space-y-1">
 
-                        <div x-data="{ open: {{ $profilActive ? 'true' : 'false' }} }" class="space-y-1">
+                            <a href="{{ route('pac.index') }}"
+                                class="{{ request()->routeIs('pac.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🏢</span>
+                                <span>PAC</span>
+                            </a>
+
+                            <a href="{{ route('pr.index') }}"
+                                class="{{ request()->routeIs('pr.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🏘️</span>
+                                <span>PR</span>
+                            </a>
+
+                            <a href="{{ route('par.index') }}"
+                                class="{{ request()->routeIs('par.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🏠</span>
+                                <span>PAR</span>
+                            </a>
+
+                            <a href="{{ route('pengurus.index') }}"
+                                class="{{ request()->routeIs('pengurus.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">👤</span>
+                                <span>Pengurus</span>
+                            </a>
+
+                            <a href="{{ route('lembaga.index') }}"
+                                class="{{ request()->routeIs('lembaga.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🏛️</span>
+                                <span>Lembaga</span>
+                            </a>
+
+                            <a href="{{ route('jabatan.index') }}"
+                                class="{{ request()->routeIs('jabatan.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📌</span>
+                                <span>Jabatan</span>
+                            </a>
 
                             @php
                                 $profilActive = request()->routeIs('profil-organisasi.*');
@@ -137,7 +146,7 @@ $watch('zoom', value => {
 
                                 <button type="button" @click="open = !open"
                                     class="w-full flex items-center justify-between rounded-2xl px-4 py-3 text-sm transition
-            {{ $profilActive ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-700 hover:bg-gray-50' }}">
+                            {{ $profilActive ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-700 hover:bg-gray-50' }}">
 
                                     <span class="flex items-center gap-3">
                                         🏛️
@@ -155,25 +164,25 @@ $watch('zoom', value => {
 
                                     <a href="{{ route('profil-organisasi.sejarah') }}"
                                         class="block rounded-xl px-4 py-2 text-sm transition
-                {{ request()->routeIs('profil-organisasi.sejarah')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50' }}">
+                                {{ request()->routeIs('profil-organisasi.sejarah')
+                                    ? 'bg-green-100 text-green-700 font-medium'
+                                    : 'text-gray-600 hover:bg-gray-50' }}">
                                         📜 Sejarah
                                     </a>
 
                                     <a href="{{ route('profil-organisasi.visi-misi') }}"
                                         class="block rounded-xl px-4 py-2 text-sm transition
-                {{ request()->routeIs('profil-organisasi.visi-misi')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50' }}">
+                                {{ request()->routeIs('profil-organisasi.visi-misi')
+                                    ? 'bg-green-100 text-green-700 font-medium'
+                                    : 'text-gray-600 hover:bg-gray-50' }}">
                                         🎯 Visi & Misi
                                     </a>
 
                                     <a href="{{ route('profil-organisasi.struktur') }}"
                                         class="block rounded-xl px-4 py-2 text-sm transition
-                {{ request()->routeIs('profil-organisasi.struktur')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50' }}">
+                                {{ request()->routeIs('profil-organisasi.struktur')
+                                    ? 'bg-green-100 text-green-700 font-medium'
+                                    : 'text-gray-600 hover:bg-gray-50' }}">
                                         🧩 Struktur Organisasi
                                     </a>
 
@@ -181,127 +190,203 @@ $watch('zoom', value => {
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- KADERISASI -->
-                <div class="mt-6">
-                    <button @click="kaderisasi = !kaderisasi"
-                        class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
-                        <span>Kaderisasi</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
-                            :class="kaderisasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    {{-- KADERISASI --}}
+                    <div class="mt-6">
+                        <button @click="kaderisasi = !kaderisasi"
+                            class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
+                            <span>Kaderisasi</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                :class="kaderisasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
 
-                    <div x-show="kaderisasi" x-transition class="mt-2 space-y-1">
-                        <a href="{{ route('anggota.index') }}"
-                            class="{{ request()->routeIs('anggota.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">🧑‍🤝‍🧑</span>
-                            <span>Anggota</span>
-                        </a>
-                        <a href="{{ route('riwayat-kaderisasi.index') }}"
-                            class="{{ request()->routeIs('riwayat-kaderisasi.index') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">🎓</span><span>Riwayat Kaderisasi</span></a>
-                        <!-- MONITORING -->
-                        <div x-data="{ open: {{ request()->routeIs('monitoring.*') ? 'true' : 'false' }} }" class="space-y-1">
+                        <div x-show="kaderisasi" x-transition class="mt-2 space-y-1">
 
-                            <button @click="open = !open"
-                                class="w-full flex items-center justify-between rounded-2xl px-3 py-2.5 text-sm font-medium transition
-            {{ request()->routeIs('monitoring.*')
-                ? 'bg-green-50 text-green-700 border border-green-100'
-                : 'text-gray-700 hover:bg-gray-100' }}">
+                            <a href="{{ route('anggota.index') }}"
+                                class="{{ request()->routeIs('anggota.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🧑‍🤝‍🧑</span>
+                                <span>Anggota</span>
+                            </a>
 
-                                <span class="flex items-center gap-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 17v-6m4 6V7m4 10V4M5 20h14" />
-                                    </svg>
-                                    Monitoring
-                                </span>
+                            <a href="{{ route('riwayat-kaderisasi.index') }}"
+                                class="{{ request()->routeIs('riwayat-kaderisasi.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🎓</span>
+                                <span>Riwayat Kaderisasi</span>
+                            </a>
 
-                                <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
+                            <a href="{{ route('monitoring.anggota') }}"
+                                class="{{ request()->routeIs('monitoring.anggota') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📊</span>
+                                <span>Monitoring Anggota</span>
+                            </a>
 
-                            <div x-show="open" x-transition class="ml-5 space-y-1 border-l border-gray-200 pl-4">
+                            <a href="{{ route('monitoring.lembaga') }}"
+                                class="{{ request()->routeIs('monitoring.lembaga') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🏢</span>
+                                <span>Monitoring Lembaga</span>
+                            </a>
 
-                                <a href="{{ route('monitoring.anggota') }}"
-                                    class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
-                {{ request()->routeIs('monitoring.anggota')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}">
-                                    👥 Monitoring Anggota
-                                </a>
-
-                                <a href="{{ route('monitoring.lembaga') }}"
-                                    class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
-                {{ request()->routeIs('monitoring.lembaga')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}">
-                                    🏢 Monitoring Lembaga
-                                </a>
-
-                                <a href="{{ route('monitoring.par') }}"
-                                    class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
-                {{ request()->routeIs('monitoring.par')
-                    ? 'bg-green-100 text-green-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}">
-                                    📍 Monitoring PAR
-                                </a>
-
-                            </div>
+                            <a href="{{ route('monitoring.par') }}"
+                                class="{{ request()->routeIs('monitoring.par') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📍</span>
+                                <span>Monitoring PAR</span>
+                            </a>
                         </div>
                     </div>
-                </div>
 
-                <!-- ADMINISTRASI -->
-                <div class="mt-6">
-                    <button @click="administrasi = !administrasi"
-                        class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
-                        <span>Administrasi</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
-                            :class="administrasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    {{-- ADMINISTRASI --}}
+                    <div class="mt-6">
+                        <button @click="administrasi = !administrasi"
+                            class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
+                            <span>Administrasi</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                :class="administrasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
 
-                    <div x-show="administrasi" x-transition class="mt-2 space-y-1">
-                        <a href="{{ route('kegiatan.index') }}"
-                            class="{{ request()->routeIs('kegiatan.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
-                            <span class="sidebar-icon">📅</span>
-                            <span>Kegiatan</span>
-                        </a>
-                        <a href="{{ route('surat.index') }}"
-                            class="{{ request()->routeIs('surat.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">📨</span><span>Surat</span></a>
-                        <a href="{{ route('inventaris.index') }}"
-                            class="{{ request()->routeIs('inventaris.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">📦</span><span>Inventaris</span></a>
-                        <a href="{{ route('peminjaman.index') }}"
-                            class="{{ request()->routeIs('peminjaman.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">🔄</span><span>Peminjaman</span></a>
-                        <a href="{{ route('notulen.index') }}"
-                            class="{{ request()->routeIs('notulen.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">📝</span><span>Notulen</span></a>
-                        <a href="{{ route('buku-tamu.index') }}"
-                            class="{{ request()->routeIs('buku-tamu.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">📔</span><span>Buku Tamu</span></a>
-                        <a href="{{ route('pengaduan.index') }}"
-                            class="{{ request()->routeIs('pengaduan.*') ? 'sidebar-link-active' : 'sidebar-link' }}"><span
-                                class="sidebar-icon">⚠️</span><span>Pengaduan</span></a>
+                        <div x-show="administrasi" x-transition class="mt-2 space-y-1">
+
+                            <a href="{{ route('kegiatan.index') }}"
+                                class="{{ request()->routeIs('kegiatan.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📅</span>
+                                <span>Kegiatan</span>
+                            </a>
+
+                            <a href="{{ route('surat.index') }}"
+                                class="{{ request()->routeIs('surat.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📨</span>
+                                <span>Surat</span>
+                            </a>
+
+                            <a href="{{ route('inventaris.index') }}"
+                                class="{{ request()->routeIs('inventaris.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📦</span>
+                                <span>Inventaris</span>
+                            </a>
+
+                            <a href="{{ route('peminjaman.index') }}"
+                                class="{{ request()->routeIs('peminjaman.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">🔄</span>
+                                <span>Peminjaman</span>
+                            </a>
+
+                            <a href="{{ route('notulen.index') }}"
+                                class="{{ request()->routeIs('notulen.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📝</span>
+                                <span>Notulen</span>
+                            </a>
+
+                            <a href="{{ route('buku-tamu.index') }}"
+                                class="{{ request()->routeIs('buku-tamu.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📔</span>
+                                <span>Buku Tamu</span>
+                            </a>
+
+                            <a href="{{ route('pengaduan.index') }}"
+                                class="{{ request()->routeIs('pengaduan.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">⚠️</span>
+                                <span>Pengaduan</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- PUBLIKASI -->
+                    <div class="mt-6">
+                        <button @click="publikasi = !publikasi"
+                            class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-700">
+                            <span>Publikasi</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform"
+                                :class="publikasi ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div x-show="publikasi" x-transition class="mt-2 space-y-1">
+
+                            <a href="{{ route('berita.index') }}"
+                                class="{{ request()->routeIs('berita.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📰</span>
+                                <span>Berita</span>
+                            </a>
+
+                            <a href="{{ route('dokumentasi.index') }}"
+                                class="{{ request()->routeIs('dokumentasi.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                                <span class="sidebar-icon">📸</span>
+                                <span>Dokumentasi</span>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    {{-- ================= ADMIN PR ================= --}}
+                @elseif($user->role === 'admin_pr')
+                    <a href="{{ route('dashboard.pr') }}"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium transition {{ request()->routeIs('dashboard.pr') ? 'bg-green-600 text-white shadow-lg shadow-green-600/20' : 'text-gray-700 hover:bg-white hover:shadow-sm' }}">
+                        <span class="text-lg">🏠</span>
+                        Dashboard
+                    </a>
+
+                    <div class="mt-6 space-y-1">
+
+                        <a href="{{ route('par.index') }}"
+                            class="{{ request()->routeIs('par.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                            <span class="sidebar-icon">🏘️</span>
+                            <span>Data PAR</span>
+                        </a>
+
+                        <a href="{{ route('monitoring.anggota') }}"
+                            class="{{ request()->routeIs('monitoring.anggota') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                            <span class="sidebar-icon">📊</span>
+                            <span>Monitoring Anggota</span>
+                        </a>
+
+                        <a href="{{ route('laporan.anggota') }}"
+                            class="{{ request()->routeIs('laporan.anggota') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                            <span class="sidebar-icon">📄</span>
+                            <span>Laporan Anggota</span>
+                        </a>
+
+                    </div>
+
+                    {{-- ================= ADMIN PAR ================= --}}
+                @elseif($user->role === 'admin_par')
+                    <a href="{{ route('dashboard.par') }}"
+                        class="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium transition {{ request()->routeIs('dashboard.par') ? 'bg-green-600 text-white shadow-lg shadow-green-600/20' : 'text-gray-700 hover:bg-white hover:shadow-sm' }}">
+                        <span class="text-lg">🏠</span>
+                        Dashboard
+                    </a>
+
+                    <div class="mt-6 space-y-1">
+
+                        <a href="{{ route('anggota.index') }}"
+                            class="{{ request()->routeIs('anggota.*') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                            <span class="sidebar-icon">👥</span>
+                            <span>Data Anggota</span>
+                        </a>
+
+                        <a href="{{ route('laporan.anggota') }}"
+                            class="{{ request()->routeIs('laporan.anggota') ? 'sidebar-link-active' : 'sidebar-link' }}">
+                            <span class="sidebar-icon">📄</span>
+                            <span>Laporan Anggota</span>
+                        </a>
+
+                    </div>
+                @endif
+
             </nav>
 
-            <!-- Footer Sidebar -->
+            {{-- Footer Sidebar --}}
             <div class="p-4 border-t border-[#F4F7F4] bg-[#F4F7F4]" x-data="{ profileOpen: false }">
+
                 <button @click="profileOpen = !profileOpen"
                     class="w-full flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3 py-3 hover:shadow-sm transition">
 
@@ -323,6 +408,7 @@ $watch('zoom', value => {
                 </button>
 
                 <div x-show="profileOpen" x-transition class="mt-3 space-y-1">
+
                     <a href="{{ route('profile.edit') }}"
                         class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                         👤 Profil Saya
@@ -335,8 +421,10 @@ $watch('zoom', value => {
                             🚪 Logout
                         </button>
                     </form>
+
                 </div>
             </div>
+
         </aside>
 
         <!-- Main Content -->

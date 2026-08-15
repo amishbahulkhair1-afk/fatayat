@@ -3,75 +3,168 @@
         <h2 class="font-semibold text-xl text-gray-800">Catat Peminjaman</h2>
     </x-slot>
 
-    <div class="py-6 max-w-2xl mx-auto">
-        <form action="{{ route('peminjaman.store') }}" method="POST" class="bg-white p-6 rounded shadow space-y-4">
+    <div class="py-6 max-w-3xl mx-auto">
+
+        <form action="{{ route('peminjaman.store') }}" method="POST"
+            class="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm space-y-6">
+
             @csrf
 
-            <div>
-                <label class="block font-medium">Barang</label>
-                <select name="inventaris_id" class="w-full border rounded p-2">
-                    <option value="">-- Pilih --</option>
-                    @foreach ($inventaris as $item)
-                        <option value="{{ $item->id }}" {{ old('inventaris_id') == $item->id ? 'selected' : '' }}>
-                            {{ $item->nama_barang }} (Stok tersedia: {{ $item->jumlah }} {{ $item->satuan }})
-                        </option>
-                    @endforeach
-                </select>
+            {{-- Barang --}}
+            <div x-data="{
+                openBarang: false,
+                labelBarang: @js(old('inventaris_id') ? optional($inventaris->firstWhere('id', old('inventaris_id')))->nama_barang . ' (Stok tersedia: ' . optional($inventaris->firstWhere('id', old('inventaris_id')))->jumlah . ' ' . optional($inventaris->firstWhere('id', old('inventaris_id')))->satuan . ')' : 'Pilih Barang Inventaris')
+            }" class="relative">
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">Barang Inventaris</label>
+
+                <input type="hidden" name="inventaris_id" value="{{ old('inventaris_id') }}">
+
+                <x-ui.dropdown width="80" align="left">
+                    <x-slot name="trigger">
+                        <button type="button" @click="openBarang = !openBarang"
+                            class="w-full flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 hover:border-green-300 hover:shadow-sm transition">
+
+                            <span x-text="labelBarang" class="truncate text-left"></span>
+
+                            <svg class="w-4 h-4 text-gray-400 ml-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+
+                        @foreach ($inventaris as $item)
+                            <button type="button"
+                                @click="
+                                    $el.closest('[x-data]').querySelector('input[name=inventaris_id]').value = '{{ $item->id }}';
+                                    labelBarang = '{{ $item->nama_barang }} (Stok tersedia: {{ $item->jumlah }} {{ $item->satuan }})';
+                                    openBarang = false;
+                                "
+                                class="flex w-full items-start gap-3 rounded-xl px-3 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition text-left">
+
+                                <span class="mt-1 h-2.5 w-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+
+                                <div class="min-w-0">
+                                    <div class="font-medium truncate">{{ $item->nama_barang }}</div>
+                                    <div class="text-xs text-gray-500 truncate">
+                                        Stok tersedia: {{ $item->jumlah }} {{ $item->satuan }}
+                                    </div>
+                                </div>
+                            </button>
+                        @endforeach
+
+                    </x-slot>
+                </x-ui.dropdown>
+
                 @error('inventaris_id')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div>
-                <label class="block font-medium">Peminjam</label>
-                <select name="pengurus_id" class="w-full border rounded p-2">
-                    <option value="">-- Pilih --</option>
-                    @foreach ($pengurus as $p)
-                        <option value="{{ $p->id }}" {{ old('pengurus_id') == $p->id ? 'selected' : '' }}>
-                            {{ $p->nama_lengkap }}</option>
-                    @endforeach
-                </select>
+            {{-- Peminjam --}}
+            <div x-data="{
+                openPeminjam: false,
+                labelPeminjam: @js(old('pengurus_id') ? optional($pengurus->firstWhere('id', old('pengurus_id')))->nama_lengkap : 'Pilih Peminjam')
+            }" class="relative">
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">Peminjam</label>
+
+                <input type="hidden" name="pengurus_id" value="{{ old('pengurus_id') }}">
+
+                <x-ui.dropdown width="80" align="left">
+                    <x-slot name="trigger">
+                        <button type="button" @click="openPeminjam = !openPeminjam"
+                            class="w-full flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 hover:border-green-300 hover:shadow-sm transition">
+
+                            <span x-text="labelPeminjam" class="truncate text-left"></span>
+
+                            <svg class="w-4 h-4 text-gray-400 ml-3 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+
+                        @foreach ($pengurus as $p)
+                            <button type="button"
+                                @click="
+                                    $el.closest('[x-data]').querySelector('input[name=pengurus_id]').value = '{{ $p->id }}';
+                                    labelPeminjam = '{{ $p->nama_lengkap }}';
+                                    openPeminjam = false;
+                                "
+                                class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition text-left">
+
+                                <span class="h-2.5 w-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+                                <span class="truncate">{{ $p->nama_lengkap }}</span>
+                            </button>
+                        @endforeach
+
+                    </x-slot>
+                </x-ui.dropdown>
+
                 @error('pengurus_id')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
+            {{-- Jumlah --}}
             <div>
-                <label class="block font-medium">Jumlah Pinjam</label>
-                <input type="number" name="jumlah_pinjam" value="{{ old('jumlah_pinjam', 1) }}"
-                    class="w-full border rounded p-2">
+                <x-ui.input type="number" name="jumlah_pinjam" label="Jumlah Pinjam" :value="old('jumlah_pinjam', 1)" min="1"
+                    required />
+
                 @error('jumlah_pinjam')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            {{-- Tanggal --}}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+
                 <div>
-                    <label class="block font-medium">Tanggal Pinjam</label>
-                    <input type="date" name="tanggal_pinjam" value="{{ old('tanggal_pinjam') }}"
-                        class="w-full border rounded p-2">
+                    <x-ui.date-input name="tanggal_pinjam" label="Tanggal Pinjam" :value="old('tanggal_pinjam')" required />
+
                     @error('tanggal_pinjam')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div>
-                    <label class="block font-medium">Rencana Kembali</label>
-                    <input type="date" name="tanggal_kembali_rencana" value="{{ old('tanggal_kembali_rencana') }}"
-                        class="w-full border rounded p-2">
+                    <x-ui.date-input name="tanggal_kembali_rencana" label="Rencana Kembali" :value="old('tanggal_kembali_rencana')"
+                        required />
+
                     @error('tanggal_kembali_rencana')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
+            {{-- Keterangan --}}
             <div>
-                <label class="block font-medium">Keterangan</label>
-                <textarea name="keterangan" class="w-full border rounded p-2">{{ old('keterangan') }}</textarea>
+                <x-ui.textarea name="keterangan" label="Keterangan" rows="4"
+                    placeholder="Tambahkan catatan peminjaman jika diperlukan...">{{ old('keterangan') }}</x-ui.textarea>
             </div>
 
-            <div class="flex gap-2">
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
-                <a href="{{ route('peminjaman.index') }}" class="bg-gray-300 px-4 py-2 rounded">Batal</a>
+            {{-- Action --}}
+            <div class="flex flex-col gap-3 sm:flex-row sm:justify-end pt-4">
+
+                <a href="{{ route('peminjaman.index') }}"
+                    class="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+
+                    ← Batal
+                </a>
+
+                <button type="submit"
+                    class="inline-flex items-center justify-center rounded-2xl bg-green-700 px-5 py-3 text-sm font-semibold text-white hover:bg-green-800 transition shadow-lg shadow-green-700/20">
+
+                    💾 Simpan Peminjaman
+                </button>
             </div>
         </form>
     </div>

@@ -3,62 +3,89 @@
         <h2 class="font-semibold text-xl text-gray-800">Tambah Tamu</h2>
     </x-slot>
 
-    <div class="py-6 max-w-2xl mx-auto">
-        <form action="{{ route('buku-tamu.store') }}" method="POST" class="bg-white p-6 rounded shadow space-y-4">
+    <div class="py-6 max-w-3xl mx-auto">
+
+        <form action="{{ route('buku-tamu.store') }}" method="POST"
+            class="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm space-y-6">
+
             @csrf
 
+            {{-- Header --}}
+            <div class="border-b border-gray-100 pb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Form Tambah Tamu</h3>
+                <p class="text-sm text-gray-500 mt-1">
+                    Catat data kunjungan tamu atau instansi yang datang ke PAC Fatayat NU Pragaan.
+                </p>
+            </div>
+
+            {{-- Nama Tamu --}}
             <div>
-                <label class="block font-medium">Nama Tamu</label>
-                <input type="text" name="nama_tamu" value="{{ old('nama_tamu') }}" class="w-full border rounded p-2">
+                <x-ui.input name="nama_tamu" label="Nama Tamu" :value="old('nama_tamu')"
+                    placeholder="Masukkan nama lengkap tamu" />
+
                 @error('nama_tamu')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
+            {{-- Instansi --}}
             <div>
-                <label class="block font-medium">Asal Instansi</label>
-                <input type="text" name="asal_instansi" value="{{ old('asal_instansi') }}"
-                    class="w-full border rounded p-2">
+                <x-ui.input name="asal_instansi" label="Asal Instansi" :value="old('asal_instansi')"
+                    placeholder="Contoh: Kecamatan Pragaan, NU Cabang Sumenep, atau organisasi lain" />
             </div>
 
+            {{-- Tujuan --}}
             <div>
-                <label class="block font-medium">Tujuan Kunjungan</label>
-                <input type="text" name="tujuan_kunjungan" value="{{ old('tujuan_kunjungan') }}"
-                    class="w-full border rounded p-2">
+                <x-ui.input name="tujuan_kunjungan" label="Tujuan Kunjungan" :value="old('tujuan_kunjungan')"
+                    placeholder="Contoh: Silaturahmi, koordinasi program, konsultasi administrasi, dan lain-lain" />
+
                 @error('tujuan_kunjungan')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            {{-- Tanggal & Jam --}}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+
                 <div>
-                    <label class="block font-medium">Tanggal Kunjungan</label>
-                    <input type="date" name="tanggal_kunjungan" value="{{ old('tanggal_kunjungan') }}"
-                        class="w-full border rounded p-2">
+                    <x-ui.date-input name="tanggal_kunjungan" label="Tanggal Kunjungan" :value="old('tanggal_kunjungan')" />
+
                     @error('tanggal_kunjungan')
-                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div>
-                    <label class="block font-medium">Jam Kunjungan</label>
-                    <input type="time" name="jam_kunjungan" value="{{ old('jam_kunjungan') }}"
-                        class="w-full border rounded p-2">
+                    <x-ui.time-input name="jam_kunjungan" label="Jam Kunjungan" :value="old('jam_kunjungan')" />
                 </div>
             </div>
 
+            {{-- Kontak --}}
             <div>
-                <label class="block font-medium">Kontak</label>
-                <input type="text" name="kontak" value="{{ old('kontak') }}" class="w-full border rounded p-2">
+                <x-ui.input name="kontak" label="Kontak" :value="old('kontak')"
+                    placeholder="Nomor telepon atau WhatsApp yang bisa dihubungi" />
             </div>
 
+            {{-- Keterangan --}}
             <div>
-                <label class="block font-medium">Keterangan</label>
-                <textarea name="keterangan" class="w-full border rounded p-2">{{ old('keterangan') }}</textarea>
+                <x-ui.textarea name="keterangan" label="Keterangan Tambahan" rows="5"
+                    placeholder="Tambahkan catatan tambahan mengenai kunjungan, pihak yang ditemui, atau hal penting lainnya...">{{ old('keterangan') }}</x-ui.textarea>
             </div>
 
-            <div class="flex gap-2">
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
-                <a href="{{ route('buku-tamu.index') }}" class="bg-gray-300 px-4 py-2 rounded">Batal</a>
+            {{-- Action --}}
+            <div class="flex flex-col gap-3 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
+
+                <a href="{{ route('buku-tamu.index') }}"
+                    class="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+
+                    ← Batal
+                </a>
+
+                <button type="submit"
+                    class="inline-flex items-center justify-center rounded-2xl bg-green-700 px-5 py-3 text-sm font-semibold text-white hover:bg-green-800 transition shadow-lg shadow-green-700/20">
+
+                    💾 Simpan Tamu
+                </button>
             </div>
         </form>
     </div>

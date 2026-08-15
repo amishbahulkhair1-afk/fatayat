@@ -1,52 +1,32 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.userapp')
 
-<head>
-    <meta charset="utf-8">
-    <title>Status Pengaduan</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Status Pengaduan - Fatayat NU PAC Pragaan')
 
-<body class="bg-gray-100 py-16">
-    <div class="max-w-md mx-auto px-4">
-        <div class="bg-white p-6 rounded shadow space-y-3">
-            <h1 class="text-xl font-bold text-center mb-2">Status Pengaduan</h1>
+@include('pengaduan-publik._styles')
 
-            <div>
-                <p class="text-gray-500 text-sm">Nomor Pengaduan</p>
-                <p class="font-medium">{{ $pengaduan->no_pengaduan }}</p>
+@section('content')
+    <section class="complaint-page">
+        <div class="complaint-shell" style="max-width: 680px;">
+            <div class="complaint-hero">
+                <span class="complaint-kicker"><i class="fa-solid fa-clock-rotate-left"></i> Layanan Publik</span>
+                <h1>Status Pengaduan</h1>
+                <p>Berikut perkembangan terbaru dari laporan yang Anda ajukan.</p>
             </div>
-
-            <div>
-                <p class="text-gray-500 text-sm">Status Saat Ini</p>
-                <span
-                    class="inline-block px-3 py-1 rounded text-sm
-                    {{ $pengaduan->status == 'Selesai' ? 'bg-green-100 text-green-700' : '' }}
-                    {{ $pengaduan->status == 'Diproses' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                    {{ $pengaduan->status == 'Ditolak' ? 'bg-red-100 text-red-700' : '' }}
-                    {{ $pengaduan->status == 'Baru' ? 'bg-gray-100 text-gray-700' : '' }}">
-                    {{ $pengaduan->status }}
-                </span>
-            </div>
-
-            <div>
-                <p class="text-gray-500 text-sm">Tanggal Diajukan</p>
-                <p>{{ $pengaduan->tanggal_pengaduan }}</p>
-            </div>
-
-            @if ($pengaduan->tanggapan_admin)
-                <div>
-                    <p class="text-gray-500 text-sm">Tanggapan dari Admin</p>
-                    <p class="bg-gray-50 p-3 rounded">{{ $pengaduan->tanggapan_admin }}</p>
+            <div class="complaint-card">
+                <div class="complaint-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                <h2 class="complaint-card-title">Detail laporan</h2>
+                <div class="complaint-details">
+                    <div class="complaint-detail"><small>Nomor Pengaduan</small><strong>{{ $pengaduan->no_pengaduan }}</strong></div>
+                    <div class="complaint-detail"><small>Status Saat Ini</small><span class="complaint-status status-{{ strtolower($pengaduan->status) }}">{{ $pengaduan->status }}</span></div>
+                    <div class="complaint-detail"><small>Tanggal Diajukan</small><strong>{{ \Carbon\Carbon::parse($pengaduan->tanggal_pengaduan)->translatedFormat('d F Y') }}</strong></div>
                 </div>
-            @else
-                <p class="text-gray-400 text-sm italic">Belum ada tanggapan dari admin.</p>
-            @endif
-
-            <a href="{{ route('pengaduan.publik.cek') }}" class="text-blue-600 text-sm block text-center mt-4">Cek Nomor
-                Lain</a>
+                @if ($pengaduan->tanggapan_admin)
+                    <div class="complaint-response"><strong>Tanggapan dari Admin</strong><br>{{ $pengaduan->tanggapan_admin }}</div>
+                @else
+                    <p class="complaint-card-intro" style="margin:0;">Belum ada tanggapan dari admin. Silakan cek kembali secara berkala.</p>
+                @endif
+                <div class="complaint-actions"><a href="{{ route('pengaduan.publik.cek') }}" class="complaint-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Nomor Lain</a></div>
+            </div>
         </div>
-    </div>
-</body>
-
-</html>
+    </section>
+@endsection

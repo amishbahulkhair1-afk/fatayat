@@ -1,45 +1,94 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">Edit Program Kerja - {{ $lembaga->nama_lembaga }}</h2>
+        <h2 class="font-semibold text-xl text-gray-800">
+            Edit Proker
+        </h2>
     </x-slot>
 
     <div class="py-6 max-w-2xl mx-auto">
+
         <form action="{{ route('lembaga.program-kerja.update', [$lembaga->id, $program_kerja->id]) }}" method="POST"
-            class="bg-white p-6 rounded shadow space-y-4">
+            class="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm space-y-5">
+
             @csrf
             @method('PUT')
 
-            <div>
-                <label class="block font-medium">Nama Program Kerja</label>
-                <input type="text" name="nama_program_kerja"
-                    value="{{ old('nama_program_kerja', $program_kerja->nama_program_kerja) }}"
-                    class="w-full border rounded p-2">
-                @error('nama_program_kerja')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+            {{-- Nama Program --}}
+            <x-ui.input name="nama_program_kerja" label="Nama Program Kerja" :value="old('nama_program_kerja', $program_kerja->nama_program_kerja)" required />
+
+            {{-- Deskripsi --}}
+            <x-ui.textarea name="deskripsi" label="Deskripsi"
+                rows="4">{{ old('deskripsi', $program_kerja->deskripsi) }}</x-ui.textarea>
+
+            {{-- Status --}}
+            <div x-data="{
+                labelStatus: '{{ old('status', $program_kerja->status ?? 'Tidak Selesai') }}'
+            }" class="space-y-2">
+
+                <label class="block text-sm font-medium text-gray-700">
+                    Status
+                </label>
+
+                <input type="hidden" name="status"
+                    value="{{ old('status', $program_kerja->status ?? 'Tidak Selesai') }}">
+
+                <x-ui.dropdown width="64" align="left">
+
+                    <x-slot name="trigger">
+                        <button type="button"
+                            class="w-full flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 hover:border-green-300 hover:shadow-sm transition">
+
+                            <span x-text="labelStatus"></span>
+
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+
+                        <button type="button"
+                            @click="$el.closest('[x-data]').querySelector('input[name=status]').value = 'Tidak Selesai'; labelStatus = 'Tidak Selesai'"
+                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+
+                            <span class="h-2.5 w-2.5 rounded-full bg-yellow-500"></span>
+                            Tidak Selesai
+                        </button>
+
+                        <button type="button"
+                            @click="$el.closest('[x-data]').querySelector('input[name=status]').value = 'Selesai'; labelStatus = 'Selesai'"
+                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition">
+
+                            <span class="h-2.5 w-2.5 rounded-full bg-green-500"></span>
+                            Selesai
+                        </button>
+
+                    </x-slot>
+                </x-ui.dropdown>
+
+                @error('status')
+                    <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div>
-                <label class="block font-medium">Deskripsi</label>
-                <textarea name="deskripsi" class="w-full border rounded p-2">{{ old('deskripsi', $program_kerja->deskripsi) }}</textarea>
-            </div>
+            {{-- Tombol --}}
+            <div class="flex items-center justify-end gap-3 pt-2">
 
-            <div>
-                <label class="block font-medium">Status</label>
-                <select name="status" class="w-full border rounded p-2">
-                    <option value="Tidak Selesai"
-                        {{ old('status', $program_kerja->status) == 'Tidak Selesai' ? 'selected' : '' }}>Tidak Selesai
-                    </option>
-                    <option value="Selesai" {{ old('status', $program_kerja->status) == 'Selesai' ? 'selected' : '' }}>
-                        Selesai</option>
-                </select>
-            </div>
-
-            <div class="flex gap-2">
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
                 <a href="{{ route('lembaga.program-kerja.index', $lembaga->id) }}"
-                    class="bg-gray-300 px-4 py-2 rounded">Batal</a>
+                    class="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                    Batal
+                </a>
+
+                <button type="submit"
+                    class="inline-flex items-center justify-center rounded-2xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800 transition shadow-lg shadow-blue-700/20">
+                    Update
+                </button>
+
             </div>
+
         </form>
+
     </div>
 </x-app-layout>
